@@ -1,0 +1,51 @@
+[
+  {
+    "type": "recherche_prestataire",
+    "input": "Bonjour, je cherche une pharmacie pas loin de chez moi",
+    "expected_reply": "Voici les pharmacies disponibles à proximité :",
+    "actions": [
+      "demander_la_ville_si_absente",
+      "recherche_dans_la_base",
+      "répondre_avec_3_suggestions_max",
+      "identifier_la_plus_proche_si_position_connue"
+    ]
+  },
+  {
+    "type": "symptome_medical",
+    "input": "J'ai mal au ventre depuis ce matin",
+    "expected_reply": "Est-ce que la douleur est plutôt forte, modérée ou légère ?",
+    "follow_up": "Non, juste une gêne",
+    "final_reply": "Cela pourrait être une simple indigestion. Je peux vous localiser une pharmacie ?"
+  },
+  {
+    "type": "conseil_sante",
+    "input": "Comment éviter les grippes ?",
+    "expected_reply": "Voici quelques conseils pour éviter la grippe :",
+    "actions": [
+      "afficher_conseils_hygiene",
+      "proposer_vaccination_ou_medecin"
+    ]
+  },
+  {
+    "type": "conversation_amicale",
+    "input": "Salut, tu fais quoi ?",
+    "expected_reply": "Salut ! Je suis là pour t’aider à trouver un prestataire ou discuter santé."
+  },
+  {
+    "type": "urgence",
+    "input": "Mon ami a des difficultés à respirer",
+    "expected_reply": "C’est une urgence. Veuillez appeler immédiatement le 112.",
+    "actions": [
+      "localiser_hopital_proche",
+      "fournir_numero_d_urgence"
+    ]
+  },
+  {
+    "type": "orientation",
+    "input": "Comment aller à Santé Plus à Antsirabe ?",
+    "expected_reply": "Santé Plus se trouve à Lot 20 G 240 Ambohimiandrosoa, Antsirabe.",
+    "actions": [
+      "proposer_lien_google_maps"
+    ]
+  }
+]
