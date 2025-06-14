@@ -24,7 +24,7 @@ export default function EditPrestataire() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/prestataires/${id}`);
+        const res = await axios.get(`https://appgeosante-production.up.railway.app/api/prestataires/${id}`);
         const data = res.data;
         setForm({
           ville: data.ville || '',
@@ -79,7 +79,7 @@ export default function EditPrestataire() {
         formData.append("photos", photo);
       });
 
-      await axios.put(`http://localhost:5000/api/prestataires/${id}`, formData, {
+      await axios.put(`https://appgeosante-production.up.railway.app/api/prestataires/${id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -157,7 +157,7 @@ export default function EditPrestataire() {
             <ul>
               {existingPhotos.map((url, idx) => (
                 <li key={idx}>
-                  <img src={`http://localhost:5000/uploads/${url}`} alt={`photo ${idx + 1}`} width="100" />
+                  <img src={`https://appgeosante-production.up.railway.app/uploads/${url}`} alt={`photo ${idx + 1}`} width="100" />
                 </li>
               ))}
             </ul>
