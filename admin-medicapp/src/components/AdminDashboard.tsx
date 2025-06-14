@@ -33,7 +33,7 @@ export default function PrestatairesList() {
       setLoading(true);
       setError(null);
 
-      const res = await axios.get("http://localhost:5000/api/prestataires");
+      const res = await axios.get("https://appgeosante-production.up.railway.app/api/prestataires");
       console.log("Réponse API:", res.data);
 
       if (Array.isArray(res.data)) {
@@ -56,7 +56,7 @@ export default function PrestatairesList() {
   const handleDelete = async (id: string) => {
     if (window.confirm("Voulez-vous vraiment supprimer ce prestataire ?")) {
       try {
-        await axios.delete(`http://localhost:5000/api/prestataires/${id}`);
+        await axios.delete(`https://appgeosante-production.up.railway.app/api/prestataires/${id}`);
         setPrestataires((prev) => prev.filter((p) => p._id !== id));
         alert("Prestataire supprimé avec succès !");
       } catch (err) {
