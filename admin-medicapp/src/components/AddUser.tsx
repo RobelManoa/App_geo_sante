@@ -50,7 +50,7 @@ const AddUser: React.FC = () => {
 
     setLoading(true);
     try {
-      await axios.post('http://localhost:5000/api/utilisateurs', formData);
+      await axios.post('https://appgeosante-production.up.railway.app/api/utilisateurs', formData);
       toast.success('Utilisateur créé avec succès');
       navigate('/admin/users');
     } catch (error) {
