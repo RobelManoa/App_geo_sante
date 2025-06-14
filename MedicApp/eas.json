@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json.schemastore.org/eas.json",
+  "cli": {
+    "version": ">= 16.10.1",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "production": {
+      "autoIncrement": true,
+      "distribution": "store",
+      "android": {
+        "buildType": "aab"  
+      },
+      "ios": {
+        "enterpriseProvisioning": "universal" 
+      }
+    }
+  },
+  "submit": {
+    "production": {
+      "android": {
+        "serviceAccountKeyPath": "path/to/your/google-key.json"  
+      }
+    }
+  },
+  "update": {
+    "production": {
+      "branch": "production",
+      "runtimeVersion": "exposdk:50.0.0"  
+    }
+  }
+}

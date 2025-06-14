@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json.schemastore.org/eas.json",
+  "update": {
+    "production": { 
+      "branch": "production",
+      "runtimeVersion": "exposdk:50.0.0",
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 30000,
+      "codeSigningCertificate": "./code-signing-certificate.pem"
+    },
+    "staging": {   
+      "branch": "staging",
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
+    }
+  }
+}

@@ -20,13 +20,25 @@
         "foregroundImage": "./assets/splash-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.robelmanoa.MedicApp"
     },
     "web": {
       "favicon": "./assets/splash-icon.png"
     },
     "plugins": [
       "expo-sqlite"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "e2acc514-6fab-490e-85d2-46d59a737bf3"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/e2acc514-6fab-490e-85d2-46d59a737bf3"
+    }
   }
 }
