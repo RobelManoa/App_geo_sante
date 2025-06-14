@@ -34,9 +34,6 @@
         "projectId": "e2acc514-6fab-490e-85d2-46d59a737bf3"
       }
     },
-    "runtimeVersion": {
-      "policy": "appVersion"
-    },
     "updates": {
       "url": "https://u.expo.dev/e2acc514-6fab-490e-85d2-46d59a737bf3"
     }
