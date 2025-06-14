@@ -28,7 +28,7 @@ const UserList: React.FC = () => {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:5000/api/utilisateurs");
+      const res = await axios.get("https://appgeosante-production.up.railway.app/api/utilisateurs");
       setUsers(res.data);
     } catch (err) {
       setError("Erreur lors du chargement des utilisateurs");
@@ -41,7 +41,7 @@ const UserList: React.FC = () => {
   const handleDelete = async (id: string) => {
     if (window.confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ?")) {
       try {
-        await axios.delete(`http://localhost:5000/api/utilisateurs/${id}`);
+        await axios.delete(`https://appgeosante-production.up.railway.app/api/utilisateurs/${id}`);
         setUsers(users.filter((user) => user._id !== id));
       } catch (err) {
         setError("Erreur lors de la suppression");
