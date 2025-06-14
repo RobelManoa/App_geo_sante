@@ -43,7 +43,7 @@ export default function PrestataireForm() {
       });
 
       await axios.post(
-        "http://192.168.88.240:5000/api/prestataires",
+        "https://appgeosante-production.up.railway.app/api/prestataires",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
