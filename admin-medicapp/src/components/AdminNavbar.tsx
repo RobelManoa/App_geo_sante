@@ -9,6 +9,7 @@ const AdminNavbar: React.FC = () => {
       </div>
       <div style={styles.links}>
         <Link to="/admin" style={styles.link}>🏠 Accueil</Link>
+        <Link to="/admin/prestataires" style={styles.link}>Liste Prestataire</Link>
         <Link to="/admin/ajouter" style={styles.link}>➕ Ajouter</Link>
         <Link to="/admin/users" style={styles.link}>👤 Utilisateurs</Link>
         <Link to="/" style={styles.link}>🚪 Déconnexion</Link>

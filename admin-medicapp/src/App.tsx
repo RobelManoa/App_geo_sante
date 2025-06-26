@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PrestataireForm from './components/PrestataireForm';
-import PrestatairesList from './components/AdminDashboard';
+import AdminDashboard from './components/AdminDashboard';
+import PrestatairesList from './components/PrestatairesList';
 import EditPrestataire from './components/EditPrestataire'; 
 import AdminNavbar from './components/AdminNavbar';
 import UserList from './components/UserList';
@@ -11,8 +12,9 @@ function App() {
     <Router>
       <AdminNavbar />
       <Routes>
-        <Route path="/" element={<PrestatairesList />} />
-        <Route path="/admin" element={<PrestatairesList />} />
+        <Route path="/" element={<AdminDashboard />} />
+        <Route path="/admin/prestataires" element={<PrestatairesList />} />
+        <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin/ajouter" element={<PrestataireForm />} />
         <Route path="/admin/edit/:id" element={<EditPrestataire />} />
         <Route path="/admin/users" element={<UserList />} />
