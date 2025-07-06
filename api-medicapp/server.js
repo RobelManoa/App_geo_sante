@@ -19,17 +19,14 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// Routes
 app.use("/api/prestataires", prestataireRoutes);
 app.use("/api/utilisateurs", userRoutes);
 app.use("/api/chat", chatRoutes);
 
-// MongoDB
 const mongoURI = 'mongodb+srv://Robelmanoa:Robel2525@medicappcluster.eqwxvlc.mongodb.net/?retryWrites=true&w=majority&appName=MedicappCluster';
 // const mongoURI = 'mongodb://localhost:27017/medicapp-api';
 mongoose

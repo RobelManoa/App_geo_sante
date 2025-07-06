@@ -1,0 +1,11 @@
+🚀 Étapes de développement proposées
+Étape	Fonctionnalité
+1	Interface de chat simple (React Native / Web)
+2	API Node.js qui reçoit une requête utilisateur
+3	Détection d’intention simple (mots-clés)
+4	Intégration MongoDB (prestataires, villes)
+5	Calcul de distances avec position GPS
+6	Ajout d'un historique conversation
+7	Traitement des symptômes / conseils
+8	Intégration d’API GPT pour réponses plus naturelles (optionnel)
+9	Interface d’administration (ajouter prestataires)
