@@ -6,6 +6,7 @@ import EditPrestataire from './components/EditPrestataire';
 import AdminNavbar from './components/AdminNavbar';
 import UserList from './components/UserList';
 import AddUser from './components/AddUser';
+import 'leaflet/dist/leaflet.css';
 
 function App() {
   return (
