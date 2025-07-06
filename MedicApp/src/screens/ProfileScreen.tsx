@@ -35,7 +35,7 @@ export default function ProfileScreen() {
 
   const handleLogin = async () => {
     try {
-      const res = await axios.post("http://192.168.88.254:5000/api/utilisateurs/login", {
+      const res = await axios.post("https://appgeosante-production.up.railway.app/api/utilisateurs/login", {
         nom,
         identifiant,
       });

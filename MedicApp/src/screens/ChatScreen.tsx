@@ -49,7 +49,7 @@ export default function ChatScreen() {
         };
       }
 
-      const res = await axios.post("http://192.168.88.237:5000/api/chat", {
+      const res = await axios.post("https://appgeosante-production.up.railway.app/api/chat", {
         message: userMessage.text,
         userLocation,
       });

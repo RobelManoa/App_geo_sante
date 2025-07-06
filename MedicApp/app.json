@@ -13,7 +13,10 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -21,7 +24,8 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.robelmanoa.MedicApp"
+      "package": "com.robelmanoa.MedicApp",
+      "runtimeVersion": "1.0.0"
     },
     "web": {
       "favicon": "./assets/splash-icon.png"
@@ -35,7 +39,7 @@
       }
     },
     "updates": {
-      "url": "https://u.expo.dev/e2acc514-6fab-490e-85d2-46d59a737bf3"
+      "url": "https://u.expo.dev/8af5d5cc-2b82-49c4-b67b-40291ea5df50"
     },
     "owner": "robelmanoa"
   }
