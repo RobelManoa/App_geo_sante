@@ -1,10 +1,9 @@
 import React from "react";
-import { Platform, View, StyleSheet } from "react-native";
+import { Platform, View, StyleSheet, Animated } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 
-// Importez vos écrans ici
 import HomeScreen from "../screens/HomeScreen";
 import SearchScreen from "../screens/SearchScreen";
 import MapScreen from "../screens/MapScreen";
@@ -14,6 +13,92 @@ import ChatScreen from "../screens/ChatScreen";
 
 const Tab = createBottomTabNavigator();
 
+// Types pour les icônes Ionicons
+type IconName = keyof typeof Ionicons.glyphMap;
+
+// Types pour la configuration des onglets
+type TabConfig = {
+  label: string;
+  iconFocused: IconName;
+  iconUnfocused: IconName;
+  isCentral?: boolean;
+};
+
+// Configuration des onglets
+const TAB_CONFIG: Record<string, TabConfig> = {
+  Accueil: {
+    label: "Accueil",
+    iconFocused: "home-sharp" as IconName,
+    iconUnfocused: "home-outline" as IconName,
+  },
+  Recherche: {
+    label: "Recherche",
+    iconFocused: "search-sharp" as IconName,
+    iconUnfocused: "search-outline" as IconName,
+    isCentral: true,
+  },
+  Carte: {
+    label: "Carte",
+    iconFocused: "map-sharp" as IconName,
+    iconUnfocused: "map-outline" as IconName,
+  },
+  Chat: {
+    label: "Messages",
+    iconFocused: "chatbubble-ellipses" as IconName,
+    iconUnfocused: "chatbubble-ellipses-outline" as IconName,
+  },
+  Profil: {
+    label: "Profil",
+    iconFocused: "person-sharp" as IconName,
+    iconUnfocused: "person-outline" as IconName,
+  },
+};
+
+// Composant pour l'icône animée
+const AnimatedIcon = ({ 
+  name, 
+  size, 
+  color, 
+  focused, 
+  isCentral = false 
+}: {
+  name: IconName;
+  size: number;
+  color: string;
+  focused: boolean;
+  isCentral?: boolean;
+}) => {
+  const scaleAnim = React.useRef(new Animated.Value(1)).current;
+
+  React.useEffect(() => {
+    Animated.spring(scaleAnim, {
+      toValue: focused ? 1.2 : 1,
+      useNativeDriver: true,
+      tension: 100,
+      friction: 8,
+    }).start();
+  }, [focused]);
+
+  if (isCentral) {
+    return (
+      <Animated.View 
+        style={[
+          styles.centralButton,
+          { transform: [{ scale: scaleAnim }] }
+        ]}
+      >
+        <Ionicons name={name} size={28} color="#fff" />
+      </Animated.View>
+    );
+  }
+
+  return (
+    <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+      <Ionicons name={name} size={size} color={color} />
+    </Animated.View>
+  );
+};
+
 export default function AppNavigator() {
   return (
     <Tab.Navigator
@@ -21,43 +106,27 @@ export default function AppNavigator() {
       screenOptions={({ route }) => ({
         tabBarHideOnKeyboard: true,
         tabBarIcon: ({ color, size, focused }) => {
-          let iconName;
+          const config = TAB_CONFIG[route.name as keyof typeof TAB_CONFIG];
+          
+          if (!config) {
+            return <Ionicons name="home-outline" size={size} color={color} />;
+          }
+
+          const iconName = focused ? config.iconFocused : config.iconUnfocused;
           const iconSize = focused ? 24 : 22;
 
-          switch (route.name) {
-            case "Accueil":
-              iconName = focused ? "home-sharp" : "home-outline";
-              break;
-            case "Recherche":
-              iconName = focused ? "search-sharp" : "search-outline";
-              break;
-            case "Carte":
-              iconName = focused ? "map-sharp" : "map-outline";
-              break;
-            case "Profil":
-              iconName = focused ? "person-sharp" : "person-outline";
-              break;
-            case "Chat":
-              iconName = focused
-                ? "chatbubble-ellipses"
-                : "chatbubble-ellipses-outline";
-              break;
-            default:
-              iconName = "home-outline";
-          }
-
-          if (route.name === "Recherche") {
-            return (
-              <View style={styles.centralButton}>
-                <Ionicons name={iconName} size={28} color="#fff" />
-              </View>
-            );
-          }
-
-          return <Ionicons name={iconName} size={iconSize} color={color} />;
+          return (
+            <AnimatedIcon
+              name={iconName}
+              size={iconSize}
+              color={color}
+              focused={focused}
+              isCentral={config.isCentral}
+            />
+          );
         },
         tabBarStyle: {
-          height: Platform.OS === "ios" ? 90 : 70,
+          height: Platform.OS === "ios" ? 95 : 75,
           backgroundColor: "transparent",
           borderTopWidth: 0,
           elevation: 0,
@@ -65,27 +134,31 @@ export default function AppNavigator() {
           left: 0,
           right: 0,
           bottom: 0,
+          paddingHorizontal: 10,
+          paddingBottom: Platform.OS === "ios" ? 25 : 15,
         },
         tabBarBackground: () => (
           <BlurView
-            intensity={30}
+            intensity={40}
             tint="light"
             style={StyleSheet.absoluteFill}
           />
         ),
         tabBarItemStyle: {
-          borderRadius: 15,
-          marginHorizontal: 5,
+          borderRadius: 20,
+          marginHorizontal: 3,
           marginBottom: Platform.OS === "ios" ? 20 : 10,
-          height: 50,
+          height: 55,
+          paddingVertical: 5,
         },
         tabBarActiveTintColor: "#6366f1",
         tabBarInactiveTintColor: "#64748b",
         tabBarShowLabel: true,
         tabBarLabelStyle: {
-          fontSize: 12,
-          fontWeight: "600",
+          fontSize: 11,
+          fontWeight: "700",
           paddingBottom: Platform.OS === "ios" ? 5 : 0,
+          marginTop: 2,
         },
         headerShown: false,
       })}
@@ -93,7 +166,10 @@ export default function AppNavigator() {
       <Tab.Screen
         name="Accueil"
         component={HomeScreen}
-        options={{ tabBarLabel: "Accueil" }}
+        options={{ 
+          tabBarLabel: TAB_CONFIG.Accueil.label,
+          tabBarAccessibilityLabel: "Accéder à l'écran d'accueil"
+        }}
       />
 
       <Tab.Screen
@@ -101,25 +177,35 @@ export default function AppNavigator() {
         component={SearchScreen}
         options={{
           tabBarLabel: () => null,
+          tabBarAccessibilityLabel: "Rechercher des services médicaux"
         }}
       />
 
       <Tab.Screen
         name="Carte"
         component={MapScreen}
-        options={{ tabBarLabel: "Carte" }}
+        options={{ 
+          tabBarLabel: TAB_CONFIG.Carte.label,
+          tabBarAccessibilityLabel: "Voir la carte des services"
+        }}
       />
 
       <Tab.Screen
         name="Chat"
         component={ChatScreen}
-        options={{ tabBarLabel: "Messages" }}
+        options={{ 
+          tabBarLabel: TAB_CONFIG.Chat.label,
+          tabBarAccessibilityLabel: "Accéder aux messages"
+        }}
       />
 
       <Tab.Screen
         name="Profil"
         component={ProfileScreen}
-        options={{ tabBarLabel: "Profil" }}
+        options={{ 
+          tabBarLabel: TAB_CONFIG.Profil.label,
+          tabBarAccessibilityLabel: "Accéder au profil utilisateur"
+        }}
       />
 
       <Tab.Screen
@@ -136,22 +222,24 @@ export default function AppNavigator() {
 
 const styles = StyleSheet.create({
   centralButton: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 65,
+    height: 65,
+    borderRadius: 32.5,
     backgroundColor: "#6366f1",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: Platform.OS === "ios" ? 25 : 15,
+    marginBottom: Platform.OS === "ios" ? 30 : 20,
     shadowColor: "#6366f1",
     shadowOffset: {
       width: 0,
-      height: 10,
+      height: 12,
     },
-    shadowOpacity: 0.3,
-    shadowRadius: 15,
-    elevation: 5,
-    transform: [{ translateY: -10 }],
+    shadowOpacity: 0.4,
+    shadowRadius: 20,
+    elevation: 8,
+    transform: [{ translateY: -15 }],
+    borderWidth: 3,
+    borderColor: "rgba(255, 255, 255, 0.2)",
   },
   tabBarContainer: {
     position: "absolute",

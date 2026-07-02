@@ -1,7 +1,9 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://appgeosante-production.up.railway.app/api",
+  baseURL:
+    process.env.EXPO_PUBLIC_PRESTATAIRES_API_URL ||
+    'http://localhost:5000/api/prestataires',
   timeout: 10000,
 });
 

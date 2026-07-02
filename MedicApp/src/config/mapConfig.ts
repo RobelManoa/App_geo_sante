@@ -11,6 +11,7 @@ export default {
   },
 
   // Configuration de l'API
-  API_BASE_URL: 'https://appgeosante-production.up.railway.app/api',
+  API_BASE_URL:
+    process.env.EXPO_PUBLIC_API_URL || 'http://localhost:5000/api',
   UPLOADS_PATH: '/uploads'
 }

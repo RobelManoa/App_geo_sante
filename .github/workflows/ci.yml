@@ -1,0 +1,87 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  docker-build:
+    name: Build Docker image (${{ matrix.service }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [api-medicapp, admin-medicapp, MedicApp]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build ${{ matrix.service }} image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./${{ matrix.service }}
+          push: false
+          cache-from: type=gha,scope=${{ matrix.service }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.service }}
+
+  compose-config:
+    name: Validate docker-compose.yml
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate compose file
+        run: docker compose config -q
+
+  admin-checks:
+    name: admin-medicapp lint/typecheck/test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: admin-medicapp
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: admin-medicapp/package-lock.json
+      - run: npm ci
+      - run: npx tsc --noEmit
+      - run: npm test -- --watchAll=false
+        env:
+          CI: true
+
+  mobile-typecheck:
+    name: MedicApp typecheck
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: MedicApp
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: MedicApp/package-lock.json
+      - run: npm ci
+      - run: npx tsc --noEmit
+
+  api-install:
+    name: api-medicapp install check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: api-medicapp
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: api-medicapp/package-lock.json
+      - run: npm ci
+      - run: node --check server.js

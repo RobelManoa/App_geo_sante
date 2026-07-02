@@ -1,0 +1,85 @@
+1. Requête de localisation de prestataire
+Demandes où l’utilisateur cherche un lieu ou service médical :
+Exemple de phrase	Intention à détecter	Action du bot
+Je cherche une pharmacie près de moi	Localiser un établissement par type	Rechercher dans la BDD les pharmacies proches
+Où puis-je faire une échographie ?	Cherche un service spécifique	Rechercher prestations contenant "échographie"
+Hôpital dans mon quartier ?	Recherche vague mais géographique	Localiser les hôpitaux proches
+Où consulter un dentiste ?	Type de médecin	Filtrer categorie ou prestations = "dentiste"
+
+2. Requête par symptôme / besoin médical
+L’utilisateur exprime un problème de santé :
+Exemple de phrase	Intention à détecter	Action du bot
+J’ai mal à la tête	Symptôme physique	Répondre avec empathie, proposer un prestataire ou pharmacie
+Je suis enceinte et je vais accoucher bientôt	Besoin en maternité	Suggérer maternités, cliniques avec “pré-natal”
+Mon enfant a de la fièvre	Besoin pédiatrique	Suggérer consultation pédiatrique
+J’ai mal aux dents	Problème bucco-dentaire	Recommander un cabinet dentaire proche
+
+3. Demande de conseil médical simple
+L’utilisateur demande des informations ou recommandations générales :
+Exemple de phrase	Intention à détecter	Action du bot
+Quel médicament pour la diarrhée ?	Conseil de médication légère	Répondre par des médicaments usuels et suggérer pharmacie
+C’est quoi une consultation ORL ?	Demande d’information	Fournir une définition simple
+Comment éviter les maux de ventre ?	Conseil préventif	Répondre avec hygiène, repos, alimentation…
+
+4. Demande conversationnelle (assistant amical)
+L’utilisateur parle naturellement sans demande explicite :
+Exemple de phrase	Intention à détecter	Action du bot
+Salut, ça va ?	Conversation simple	Répondre amicalement
+Je suis fatigué en ce moment	Fatigue générale	Réagir humainement + proposer un suivi si pertinent
+Tu peux m’aider ?	Demande d’aide vague	Poser une question de relance ("Tu cherches un médecin ou une pharmacie ?")
+
+5. Expression négative ou insatisfaction
+Pour que le bot rebondisse intelligemment :
+Exemple de phrase	Intention à détecter	Action du bot
+Je n’aime pas celui-là	Rejet de la suggestion	Proposer un autre prestataire
+Pas ce quartier	Filtrer géographiquement	Appliquer filtre sur ville ou adresse
+Tu as autre chose ?	Demande d'alternative	Parcourir les suggestions suivantes dans la liste
+
+6. Demande de contact ou urgence
+Exemple de phrase	Intention à détecter	Action du bot
+Appeler le SAMU	Demande d’urgence	Fournir les numéros utiles : SAMU (124), Pompiers, etc.
+Numéro d’un docteur ?	Contact urgent	Afficher telephone du prestataire suggéré
+Je suis en danger	Urgence critique	Répondre calmement + conseiller d’appeler le 124 (ou tout numéro local d'urgence)
+Structures conversationnelles :
+1. Recherche de prestataires
+Utilisateur : Bonjour, je cherche une pharmacie pas loin de chez moi.
+Chatbot : Bonjour ! Pour vous aider, pouvez-vous me dire dans quelle ville vous êtes actuellement ? Ou voulez-vous que je me base sur votre position GPS ?
+Utilisateur : Je suis à Antananarivo.
+Chatbot : Parfait, voici quelques pharmacies à Antananarivo :
+•	Pharmacie By-Pass — Lot T16 B Ambatojara
+•	Pharmacie Sitraka — Lot 19 B 390 Ambohimiandrisoa
+La plus proche de vous semble être Pharmacie By-Pass. Souhaitez-vous obtenir l’itinéraire ou les horaires d’ouverture ?
+2. Symptômes médicaux
+•	Utilisateur : J’ai mal au ventre depuis ce matin.
+Chatbot : Je suis désolé d’apprendre cela. Est-ce que la douleur est plutôt forte, modérée ou légère ? Avez-vous d'autres symptômes comme fièvre ou nausées ?
+Utilisateur : Non, juste un peu de gêne.
+Chatbot : Cela pourrait être une simple indigestion. Dans ce cas, un médicament comme du Métronidazole peut aider.
+Souhaitez-vous que je vous localise une pharmacie à proximité où vous pouvez en trouver ?
+Utilisateur : Oui.
+Chatbot : Très bien. Voici la pharmacie la plus proche de vous : Pharmacie By-Pass à Ambatojara. Vous voulez l’itinéraire ? 
+3. Conseils santé
+Utilisateur : Comment éviter les grippes ?
+Chatbot : Excellente question ! Voici quelques conseils :
+•	Lavez-vous les mains fréquemment.
+•	Évitez les contacts proches avec des personnes malades.
+•	Aérez votre logement tous les jours.
+•	Pensez à la vaccination antigrippale.
+Souhaitez-vous que je vous oriente vers un centre de vaccination ou un médecin généraliste ?
+4. Conversation amicale
+Utilisateur : Salut, tu fais quoi ?
+Chatbot : Salut ! Moi je suis toujours dispo pour t’aider à trouver un prestataire de soins ou te donner des conseils santé. Tu as besoin d’aide pour quelque chose aujourd’hui ?
+Utilisateur : Juste envie de discuter un peu.
+Chatbot : Je suis ravi d’être ton compagnon de santé. N’oublie pas de bien t’hydrater et de faire une petite marche si tu peux !  Tu veux que je te propose un lieu pour une balade ou une pharmacie à visiter ?
+5. Cas d’urgence
+Utilisateur : Mon ami a des difficultés à respirer !
+Chatbot : C’est une urgence. Veuillez appeler immédiatement le 112 ou le service de secours le plus proche.
+Pendant ce temps, je peux vous localiser l’hôpital le plus proche de votre position. Voulez-vous que je le fasse ?
+Utilisateur : Oui s’il te plaît.
+Chatbot : L’hôpital CDU - Centre de Diagnostic et d'Urgence à Ampahibe est le plus proche. Vous pouvez l’appeler au 22 329 56.
+6. Navigation et orientation
+Utilisateur : Comment aller à Santé Plus à Antsirabe ?
+Chatbot : Santé Plus se trouve à Lot 20 G 240 Ambohimiandrosoa, Antsirabe.
+Souhaitez-vous que je vous ouvre un lien Google Maps pour l’itinéraire ?
+Utilisateur : Oui.
+Chatbot : Voici le lien pour vous guider : [Lien Google Maps]
+

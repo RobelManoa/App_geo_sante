@@ -3,6 +3,7 @@ import axios from "axios";
 import StatCard from "./StatCard";
 import MiniMap from "./MiniMap";
 import "./AdminDashboard.css";
+import { API_BASE_URL } from "../config/api";
 
 interface Prestataire {
   _id: string;
@@ -69,8 +70,8 @@ export default function AdminDashboard() {
       setError(null);
 
       const [resPrestataires, resUsers] = await Promise.all([
-        axios.get("https://appgeosante-production.up.railway.app/api/prestataires"),
-        axios.get("https://appgeosante-production.up.railway.app/api/utilisateurs"),
+        axios.get(`${API_BASE_URL}/prestataires`),
+        axios.get(`${API_BASE_URL}/utilisateurs`),
       ]);
 
       setPrestataires(resPrestataires.data || []);

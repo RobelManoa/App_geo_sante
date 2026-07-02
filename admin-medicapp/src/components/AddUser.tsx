@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './AddUser.css';
+import { API_BASE_URL } from '../config/api';
 
 interface FormData {
   societe: string;
@@ -142,7 +143,7 @@ const AddUser: React.FC = () => {
 
     setLoading(true);
     try {
-      await axios.post('https://appgeosante-production.up.railway.app/api/utilisateurs', formData);
+      await axios.post(`${API_BASE_URL}/utilisateurs`, formData);
       toast.success('✅ Utilisateur créé avec succès !');
       navigate('/admin/users');
     } catch (error: any) {

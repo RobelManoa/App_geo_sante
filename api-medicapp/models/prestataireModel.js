@@ -3,9 +3,9 @@
 import mongoose from 'mongoose';
 
 const prestataireSchema = new mongoose.Schema({
-  nom: String,
-  categorie: String,
-  ville: String,
+  nom: { type: String, required: true },
+  categorie: { type: String, required: true, index: true },
+  ville: { type: String, required: true, index: true },
   adresse: String,
   telephone: String,
   prestations: String,

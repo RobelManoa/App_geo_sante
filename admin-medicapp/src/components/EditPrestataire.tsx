@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { API_BASE_URL, UPLOADS_BASE_URL } from "../config/api";
 
 export default function EditPrestataire() {
   const { id } = useParams();
@@ -26,7 +27,7 @@ export default function EditPrestataire() {
     const fetchData = async () => {
       try {
         const res = await axios.get(
-          `https://appgeosante-production.up.railway.app/api/prestataires/${id}`
+          `${API_BASE_URL}/prestataires/${id}`
         );
         const data = res.data;
         setForm({
@@ -78,7 +79,7 @@ export default function EditPrestataire() {
       });
 
       await axios.put(
-        `https://appgeosante-production.up.railway.app/api/prestataires/${id}`,
+        `${API_BASE_URL}/prestataires/${id}`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -257,7 +258,7 @@ export default function EditPrestataire() {
               {existingPhotos.map((url, idx) => (
                 <img
                   key={idx}
-                  src={`https://appgeosante-production.up.railway.app/api/prestataires/uploads/${url}`}
+                  src={`${UPLOADS_BASE_URL}/uploads/${url}`}
                   alt={`photo-${idx}`}
                   className="rounded"
                   style={{ width: 100, height: 100, objectFit: "cover" }}

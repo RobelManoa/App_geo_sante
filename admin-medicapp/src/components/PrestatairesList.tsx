@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import { API_BASE_URL, UPLOADS_BASE_URL } from "../config/api";
 
 interface Prestataire {
   _id: string;
@@ -45,9 +46,7 @@ export default function PrestatairesList() {
   const fetchPrestataires = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(
-        "https://appgeosante-production.up.railway.app/api/prestataires"
-      );
+      const res = await axios.get(`${API_BASE_URL}/prestataires`);
       const data = Array.isArray(res.data) ? res.data : res.data.data;
       setPrestataires(data);
       setFiltered(data);
@@ -77,9 +76,7 @@ export default function PrestatairesList() {
   const handleDelete = async (id: string) => {
     if (window.confirm("Supprimer ce prestataire ?")) {
       try {
-        await axios.delete(
-          `https://appgeosante-production.up.railway.app/api/prestataires/${id}`
-        );
+        await axios.delete(`${API_BASE_URL}/prestataires/${id}`);
         setPrestataires((prev) => prev.filter((p) => p._id !== id));
       } catch (err) {
         alert("Erreur lors de la suppression.");
@@ -175,7 +172,11 @@ export default function PrestatairesList() {
                     <td>{p.prestations}</td>
                     <td>
                       <img
-                        src={p.photos[0]}
+                        src={
+                          p.photos[0]?.startsWith("http")
+                            ? p.photos[0]
+                            : `${UPLOADS_BASE_URL}/uploads/${p.photos[0]}`
+                        }
                         alt="photo"
                         className="rounded"
                         style={{

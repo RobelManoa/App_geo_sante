@@ -1,0 +1,79 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: medicapp-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --quiet --eval \"db.adminCommand({ ping: 1 })\" localhost:27017/test > /dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: ./api-medicapp
+    container_name: medicapp-api
+    restart: unless-stopped
+    environment:
+      PORT: 5000
+      MONGO_URI: mongodb://mongo:27017/medicapp
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    ports:
+      - "5000:5000"
+    volumes:
+      - api_uploads:/app/uploads
+    depends_on:
+      mongo:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:5000/health').then(r => { if (!r.ok) process.exit(1); }).catch(() => process.exit(1));\""]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  admin:
+    build:
+      context: ./admin-medicapp
+      args:
+        REACT_APP_API_BASE_URL: http://localhost:5000/api
+        REACT_APP_UPLOADS_BASE_URL: http://localhost:5000
+    container_name: medicapp-admin
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/ >/dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  mobile-web:
+    build:
+      context: ./MedicApp
+      args:
+        EXPO_PUBLIC_API_URL: http://localhost:5000/api
+        EXPO_PUBLIC_PRESTATAIRES_API_URL: http://localhost:5000/api/prestataires
+        EXPO_PUBLIC_UPLOADS_URL: http://localhost:5000
+    container_name: medicapp-mobile-web
+    restart: unless-stopped
+    ports:
+      - "3001:80"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/ >/dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  mongo_data:
+  api_uploads:

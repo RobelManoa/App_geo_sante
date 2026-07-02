@@ -1,9 +1,8 @@
 // middlewares/upload.js (ES Modules)
 
 import multer from "multer";
-import path from "path";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
+import path, { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 
 // Pour résoudre __dirname en ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -20,6 +19,21 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage });
+const allowedTypes = /jpeg|jpg|png|webp/;
+
+const upload = multer({
+  storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5 Mo par fichier
+  },
+  fileFilter: (req, file, cb) => {
+    const extOk = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimeOk = allowedTypes.test(file.mimetype);
+    if (extOk && mimeOk) {
+      return cb(null, true);
+    }
+    cb(new Error("Seules les images (jpg, jpeg, png, webp) sont autorisées"));
+  },
+});
 
 export default upload;

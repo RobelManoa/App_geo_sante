@@ -3,6 +3,7 @@ import axios from "axios";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './PrestataireForm.css';
+import { API_BASE_URL } from "../config/api";
 
 interface FormData {
   ville: string;
@@ -168,13 +169,9 @@ export default function PrestataireForm() {
         }
       });
 
-      await axios.post(
-        "https://appgeosante-production.up.railway.app/api/prestataires",
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      await axios.post(`${API_BASE_URL}/prestataires`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       toast.success('✅ Prestataire ajouté avec succès !');
       setForm({
