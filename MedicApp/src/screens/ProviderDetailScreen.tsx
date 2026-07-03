@@ -17,7 +17,7 @@ import {
 import { useRoute } from '@react-navigation/native';
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { BASE_URL } from '../config/config';
-import { WebView } from 'react-native-webview';
+import CrossPlatformWebView from '../components/CrossPlatformWebView';
 
 interface Prestataire {
   _id: string;
@@ -72,7 +72,7 @@ const OpenStreetMap = ({
   `;
 
   return (
-    <WebView
+    <CrossPlatformWebView
       source={{ html }}
       javaScriptEnabled
       domStorageEnabled

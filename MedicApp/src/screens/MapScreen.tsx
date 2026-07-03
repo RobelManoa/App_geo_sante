@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   Alert
 } from 'react-native';
-import { WebView } from 'react-native-webview';
+import CrossPlatformWebView from '../components/CrossPlatformWebView';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import type { StackNavigationProp } from '@react-navigation/stack';
@@ -229,7 +229,7 @@ export default function MapScreen() {
       </View>
 
       <View style={styles.mapContainer}>
-        <WebView
+        <CrossPlatformWebView
           source={{ html: generateMapHTML() }}
           javaScriptEnabled
           domStorageEnabled

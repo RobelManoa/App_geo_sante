@@ -1,5 +1,5 @@
 import React from 'react';
-import { WebView } from 'react-native-webview';
+import CrossPlatformWebView from './CrossPlatformWebView';
 import mapConfig from '../config/mapConfig';
 
 interface Props {
@@ -44,7 +44,7 @@ const OSMap: React.FC<Props> = ({
   `;
 
   return (
-    <WebView
+    <CrossPlatformWebView
       source={{ html }}
       javaScriptEnabled={true}
       domStorageEnabled={true}

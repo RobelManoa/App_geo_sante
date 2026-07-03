@@ -15,7 +15,9 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import * as Location from "expo-location";
+import axios from "axios";
 import api from "../api/api";
+import mapConfig from "../config/mapConfig";
 
 interface Message {
   id: number;
@@ -143,6 +145,7 @@ export default function ChatScreen() {
   const [prestataires, setPrestataires] = useState<Prestataire[]>([]);
   const [userLocation, setUserLocation] = useState<{latitude: number, longitude: number} | null>(null);
   const flatListRef = useRef<FlatList>(null);
+  const sessionIdRef = useRef<string>(`${Date.now()}-${Math.random().toString(36).slice(2)}`);
 
   useEffect(() => {
     // Message de bienvenue
@@ -474,6 +477,19 @@ export default function ChatScreen() {
     return R * c; // Distance en km
   };
 
+  // Demande à l'assistant backend (détection d'intention étendue + fallback OpenAI)
+  // de répondre pour les messages qui ne relèvent pas d'une urgence ou d'une
+  // recherche de prestataire (celles-ci restent gérées localement pour l'UI
+  // interactive et les numéros d'urgence locaux).
+  const askBackendChat = async (text: string): Promise<string> => {
+    const response = await axios.post(`${mapConfig.API_BASE_URL}/chat`, {
+      message: text,
+      userLocation,
+      sessionId: sessionIdRef.current,
+    });
+    return response.data?.reply || "Désolé, je n'ai pas compris votre demande.";
+  };
+
   const sendMessage = async () => {
     if (!inputText.trim() || loading) return;
 
@@ -483,7 +499,7 @@ export default function ChatScreen() {
       sender: "user",
       timestamp: new Date()
     };
-    
+
     setMessages(prev => [...prev, userMessage]);
     const currentId = messageId + 1;
     setMessageId(currentId);
@@ -493,10 +509,30 @@ export default function ChatScreen() {
     try {
       // Détecter l'intention
       const intent = detectIntent(inputText);
-      
-      // Générer la réponse
-      const botResponses = await generateResponse(intent, inputText, currentId);
-      
+
+      // Les urgences et recherches de prestataires restent gérées localement
+      // (numéros d'urgence locaux, cartes prestataire avec actions appel/itinéraire).
+      // Le reste est délégué au backend qui a une détection d'intention plus
+      // fine et un fallback OpenAI pour les questions libres.
+      let botResponses: Message[];
+      if (intent === "urgence" || intent === "recherche_prestataire") {
+        botResponses = await generateResponse(intent, inputText, currentId);
+      } else {
+        try {
+          const reply = await askBackendChat(inputText);
+          botResponses = [{
+            id: currentId,
+            text: reply,
+            sender: "bot",
+            timestamp: new Date(),
+            type: "text",
+          }];
+        } catch (backendError) {
+          console.error("Erreur chat backend, repli sur les réponses locales:", backendError);
+          botResponses = await generateResponse(intent, inputText, currentId);
+        }
+      }
+
       // Ajouter les réponses avec un délai pour simuler la réflexion
       for (let i = 0; i < botResponses.length; i++) {
         setTimeout(() => {

@@ -19,6 +19,7 @@ import axios from "axios";
 import { Ionicons } from "@expo/vector-icons";
 import { launchImageLibrary, launchCamera, ImagePickerResponse, MediaType } from "react-native-image-picker";
 import stylesProfile from "./ProfileScreen.styles";
+import mapConfig from "../config/mapConfig";
 
 interface User {
   _id: string;
@@ -203,7 +204,7 @@ export default function ProfileScreen() {
     }
 
     try {
-      const res = await axios.post("https://appgeosante-production.up.railway.app/api/utilisateurs/login", {
+      const res = await axios.post(`${mapConfig.API_BASE_URL}/utilisateurs/login`, {
         nom,
         identifiant,
       });
