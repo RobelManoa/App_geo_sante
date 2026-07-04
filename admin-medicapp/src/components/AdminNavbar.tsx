@@ -52,6 +52,12 @@ const AdminNavbar: React.FC = () => {
       label: "Utilisateurs",
       icon: "👥",
       description: "Gestion des utilisateurs"
+    },
+    {
+      path: "/admin/prestataire-accounts",
+      label: "Comptes portail",
+      icon: "🔑",
+      description: "Comptes du portail prestataire"
     }
   ];
 

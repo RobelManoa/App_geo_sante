@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [api-medicapp, admin-medicapp, MedicApp]
+        service: [api-medicapp, admin-medicapp, MedicApp, portail-prestataire]
     steps:
       - uses: actions/checkout@v4
 
@@ -53,6 +53,22 @@ jobs:
       - run: npm test -- --watchAll=false
         env:
           CI: true
+
+  portail-typecheck:
+    name: portail-prestataire typecheck
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: portail-prestataire
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: portail-prestataire/package-lock.json
+      - run: npm ci --legacy-peer-deps
+      - run: npx tsc --noEmit
 
   mobile-typecheck:
     name: MedicApp typecheck

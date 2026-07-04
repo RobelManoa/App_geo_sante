@@ -10,7 +10,6 @@ import {
   Platform,
   SafeAreaView,
   ActivityIndicator,
-  Alert,
   Linking,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -18,6 +17,7 @@ import * as Location from "expo-location";
 import axios from "axios";
 import api from "../api/api";
 import mapConfig from "../config/mapConfig";
+import Alert from "../utils/CrossPlatformAlert";
 
 interface Message {
   id: number;

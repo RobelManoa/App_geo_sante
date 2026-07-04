@@ -11,6 +11,8 @@ const userSchema = new mongoose.Schema({
   dateArrivee: { type: Date, required: true },
   fonction: { type: String, required: true },
   niveauFonction: { type: String, required: true },
+  numeroCarte: { type: String },
+  carteValideJusquau: { type: Date },
 }, {
   timestamps: true
 });

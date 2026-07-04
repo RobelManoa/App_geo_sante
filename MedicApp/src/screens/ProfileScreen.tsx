@@ -8,7 +8,6 @@ import {
   ScrollView,
   Switch,
   TextInput,
-  Alert,
   SafeAreaView,
   Platform,
   ActivityIndicator,
@@ -16,10 +15,14 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { launchImageLibrary, launchCamera, ImagePickerResponse, MediaType } from "react-native-image-picker";
 import stylesProfile from "./ProfileScreen.styles";
 import mapConfig from "../config/mapConfig";
+import Alert from "../utils/CrossPlatformAlert";
+import * as secureStorage from "../utils/secureStorage";
+import { SESSION_TOKEN_KEY } from "../api/carte";
 
 interface User {
   _id: string;
@@ -35,6 +38,7 @@ interface User {
 }
 
 export default function ProfileScreen() {
+  const navigation = useNavigation();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [nom, setNom] = useState("");
@@ -209,6 +213,7 @@ export default function ProfileScreen() {
         identifiant,
       });
       await AsyncStorage.setItem("user", JSON.stringify(res.data.user));
+      await secureStorage.setItem(SESSION_TOKEN_KEY, res.data.sessionToken);
       setUser(res.data.user);
     } catch (err) {
       Alert.alert("Erreur", "Nom ou identifiant incorrect.");
@@ -229,6 +234,7 @@ export default function ProfileScreen() {
           style: "destructive",
           onPress: async () => {
             await AsyncStorage.removeItem("user");
+            await secureStorage.deleteItem(SESSION_TOKEN_KEY);
             setUser(null);
           },
         },
@@ -329,6 +335,22 @@ export default function ProfileScreen() {
           <Text style={styles.userRole}>{user.fonction}</Text>
           <Text style={styles.userCompany}>{user.societe}</Text>
         </View>
+
+        {/* Carte d'assuré numérique */}
+        <TouchableOpacity
+          style={styles.carteButton}
+          onPress={() => navigation.navigate("CarteAssure" as never)}
+          activeOpacity={0.85}
+        >
+          <View style={styles.carteButtonIcon}>
+            <Ionicons name="qr-code" size={24} color="#fff" />
+          </View>
+          <View style={styles.carteButtonText}>
+            <Text style={styles.carteButtonTitle}>Ma carte d'assuré</Text>
+            <Text style={styles.carteButtonSubtitle}>QR sécurisé pour le tiers payant</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color="#fff" />
+        </TouchableOpacity>
 
         {/* Informations personnelles */}
         <View style={styles.section}>
@@ -598,6 +620,43 @@ const styles = StyleSheet.create({
   userCompany: {
     fontSize: 14,
     color: "#6b7280",
+  },
+  carteButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#6366f1",
+    marginHorizontal: 20,
+    marginTop: -10,
+    marginBottom: 20,
+    padding: 16,
+    borderRadius: 16,
+    shadowColor: "#6366f1",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  carteButtonIcon: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: "rgba(255,255,255,0.2)",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 12,
+  },
+  carteButtonText: {
+    flex: 1,
+  },
+  carteButtonTitle: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "700",
+  },
+  carteButtonSubtitle: {
+    color: "rgba(255,255,255,0.85)",
+    fontSize: 12,
+    marginTop: 2,
   },
   section: {
     marginBottom: 20,

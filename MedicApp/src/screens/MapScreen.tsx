@@ -7,11 +7,11 @@ import {
   SafeAreaView,
   Platform,
   Dimensions,
-  TouchableOpacity,
-  Alert
+  TouchableOpacity
 } from 'react-native';
 import CrossPlatformWebView from '../components/CrossPlatformWebView';
 import { Ionicons } from '@expo/vector-icons';
+import Alert from '../utils/CrossPlatformAlert';
 import { useNavigation } from '@react-navigation/native';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import api from '../api/api';

@@ -10,6 +10,7 @@ import MapScreen from "../screens/MapScreen";
 import ProviderDetailScreen from "../screens/ProviderDetailScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import ChatScreen from "../screens/ChatScreen";
+import CarteScreen from "../screens/CarteScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -211,6 +212,15 @@ export default function AppNavigator() {
       <Tab.Screen
         name="Fiche"
         component={ProviderDetailScreen}
+        options={{
+          tabBarButton: () => null,
+          tabBarStyle: { display: "none" },
+        }}
+      />
+
+      <Tab.Screen
+        name="CarteAssure"
+        component={CarteScreen}
         options={{
           tabBarButton: () => null,
           tabBarStyle: { display: "none" },

@@ -10,7 +10,6 @@ import {
   Linking,
   TouchableOpacity,
   SafeAreaView,
-  Alert,
   Animated,
   Platform,
 } from 'react-native';
@@ -18,6 +17,7 @@ import { useRoute } from '@react-navigation/native';
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { BASE_URL } from '../config/config';
 import CrossPlatformWebView from '../components/CrossPlatformWebView';
+import Alert from '../utils/CrossPlatformAlert';
 
 interface Prestataire {
   _id: string;

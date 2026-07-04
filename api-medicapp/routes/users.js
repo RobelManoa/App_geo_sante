@@ -1,11 +1,17 @@
 // routes/users.js (ES Modules)
 
 import express from 'express';
+import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import { getAllUsers, getUser, createUser, updateUser, deleteUser } from '../controllers/userController.js';
 import { validateUser } from '../middlewares/validation.js';
+import { requireAssureAuth } from '../middlewares/auth.js';
+import { loginLimiter } from '../middlewares/rateLimit.js';
 
 const router = express.Router();
+
+const SESSION_TOKEN_SECRET = process.env.SESSION_TOKEN_SECRET;
+const SESSION_TOKEN_TTL = '30d';
 
 // Créer un utilisateur
 router.post("/", validateUser, async (req, res) => {
@@ -29,7 +35,7 @@ router.get("/", async (req, res) => {
 });
 
 // Authentification simple
-router.post("/login", async (req, res) => {
+router.post("/login", loginLimiter, async (req, res) => {
   const { nom, identifiant } = req.body;
 
   if (!nom || !identifiant) {
@@ -43,16 +49,26 @@ router.post("/login", async (req, res) => {
       return res.status(404).json({ message: "Utilisateur introuvable" });
     }
 
-    res.json({ user });
+    const sessionToken = jwt.sign(
+      { sub: user._id.toString(), role: "assure" },
+      SESSION_TOKEN_SECRET,
+      { expiresIn: SESSION_TOKEN_TTL }
+    );
+
+    res.json({ user, sessionToken });
   } catch (err) {
     console.error("Erreur de connexion :", err);
     res.status(500).json({ message: "Erreur serveur" });
   }
 });
 
-// Lire un utilisateur spécifique
-router.get("/:id", async (req, res) => {
+// Lire un utilisateur spécifique (uniquement son propre profil)
+router.get("/:id", requireAssureAuth, async (req, res) => {
   try {
+    if (req.auth.id !== req.params.id) {
+      return res.status(403).json({ message: "Accès refusé" });
+    }
+
     const user = await User.findById(req.params.id);
     if (!user)
       return res.status(404).json({ message: "Utilisateur non trouvé" });

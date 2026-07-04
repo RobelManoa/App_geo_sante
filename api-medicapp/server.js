@@ -9,8 +9,16 @@ import { fileURLToPath } from "node:url";
 import prestataireRoutes from "./routes/prestataireRoutes.js";
 import chatRoutes from "./routes/chat.js";
 import userRoutes from "./routes/users.js";
+import carteRoutes from "./routes/carte.js";
+import prestataireAuthRoutes from "./routes/prestataireAuth.js";
+import prestataireAccountsRoutes from "./routes/prestataireAccounts.js";
 
 dotenv.config();
+
+if (!process.env.SESSION_TOKEN_SECRET || !process.env.CARD_TOKEN_SECRET) {
+  console.error("❌ SESSION_TOKEN_SECRET et CARD_TOKEN_SECRET doivent être définis (voir .env.example)");
+  process.exit(1);
+}
 
 // Pour résoudre __dirname avec ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -35,6 +43,9 @@ app.get("/api/health", (_req, res) => {
 app.use("/api/prestataires", prestataireRoutes);
 app.use("/api/utilisateurs", userRoutes);
 app.use("/api/chat", chatRoutes);
+app.use("/api/carte", carteRoutes);
+app.use("/api/prestataireAuth", prestataireAuthRoutes);
+app.use("/api/prestataireAccounts", prestataireAccountsRoutes);
 
 const startServer = async () => {
   try {

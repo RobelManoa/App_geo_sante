@@ -26,6 +26,14 @@ interface Utilisateur {
   createdAt?: string;
 }
 
+interface CarteValidation {
+  _id: string;
+  resultat: "valide" | "expiree" | "invalide" | "introuvable";
+  userId?: { _id: string; nom: string; prenom: string } | null;
+  prestataireAccountId?: { _id: string; email: string; nomEtablissement: string } | null;
+  createdAt: string;
+}
+
 interface DashboardStats {
   totalPrestataires: number;
   totalUtilisateurs: number;
@@ -40,6 +48,7 @@ interface DashboardStats {
 export default function AdminDashboard() {
   const [prestataires, setPrestataires] = useState<Prestataire[]>([]);
   const [utilisateurs, setUtilisateurs] = useState<Utilisateur[]>([]);
+  const [validations, setValidations] = useState<CarteValidation[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedTimeframe, setSelectedTimeframe] = useState('7d');
@@ -69,13 +78,15 @@ export default function AdminDashboard() {
       setLoading(true);
       setError(null);
 
-      const [resPrestataires, resUsers] = await Promise.all([
+      const [resPrestataires, resUsers, resValidations] = await Promise.all([
         axios.get(`${API_BASE_URL}/prestataires`),
         axios.get(`${API_BASE_URL}/utilisateurs`),
+        axios.get(`${API_BASE_URL}/carte/validations`, { params: { limit: 5 } }),
       ]);
 
       setPrestataires(resPrestataires.data || []);
       setUtilisateurs(resUsers.data || []);
+      setValidations(resValidations.data || []);
     } catch (err) {
       console.error("Erreur lors de la récupération des données", err);
       setError("Impossible de charger les données. Veuillez réessayer.");
@@ -131,6 +142,24 @@ export default function AdminDashboard() {
   });
 
   const villesOptions = Array.from(new Set(prestataires.map(p => p.ville))).sort();
+
+  const resultatBadge = (resultat: CarteValidation["resultat"]) => {
+    const badges: { [key: string]: { label: string; className: string } } = {
+      valide: { label: "Valide", className: "bg-success" },
+      expiree: { label: "Expirée", className: "bg-warning text-dark" },
+      invalide: { label: "Invalide", className: "bg-danger" },
+      introuvable: { label: "Introuvable", className: "bg-secondary" },
+    };
+    return badges[resultat] || { label: resultat, className: "bg-secondary" };
+  };
+
+  const formatDateTime = (dateString: string) =>
+    new Date(dateString).toLocaleString("fr-FR", {
+      day: "2-digit",
+      month: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 
   const handleExport = () => {
     const csvContent = "data:text/csv;charset=utf-8," + 
@@ -289,6 +318,40 @@ export default function AdminDashboard() {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* Dernières vérifications de carte */}
+          <div className="recent-section">
+            <div className="section-header">
+              <h3>Dernières vérifications de carte</h3>
+              <span className="badge bg-primary">{validations.length}</span>
+            </div>
+            <div className="recent-list">
+              {validations.length === 0 ? (
+                <p className="text-muted mb-0">Aucune vérification pour le moment.</p>
+              ) : (
+                validations.map((validation) => {
+                  const badge = resultatBadge(validation.resultat);
+                  return (
+                    <div key={validation._id} className="recent-item">
+                      <div className="item-content">
+                        <h4>
+                          {validation.userId
+                            ? `${validation.userId.prenom} ${validation.userId.nom}`
+                            : "Assuré inconnu"}
+                        </h4>
+                        <p>
+                          {validation.prestataireAccountId?.nomEtablissement || "Établissement inconnu"}
+                          {" · "}
+                          {formatDateTime(validation.createdAt)}
+                        </p>
+                        <span className={`badge ${badge.className}`}>{badge.label}</span>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
             </div>
           </div>
 
