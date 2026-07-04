@@ -41,8 +41,8 @@ services:
     build:
       context: ./admin-medicapp
       args:
-        REACT_APP_API_BASE_URL: http://localhost:5000/api
-        REACT_APP_UPLOADS_BASE_URL: http://localhost:5000
+        REACT_APP_API_BASE_URL: http://192.168.100.203:5000/api
+        REACT_APP_UPLOADS_BASE_URL: http://192.168.100.203:5000
     container_name: medicapp-admin
     restart: unless-stopped
     ports:
@@ -60,9 +60,9 @@ services:
     build:
       context: ./MedicApp
       args:
-        EXPO_PUBLIC_API_URL: http://localhost:5000/api
-        EXPO_PUBLIC_PRESTATAIRES_API_URL: http://localhost:5000/api/prestataires
-        EXPO_PUBLIC_UPLOADS_URL: http://localhost:5000
+        EXPO_PUBLIC_API_URL: http://192.168.100.203:5000/api
+        EXPO_PUBLIC_PRESTATAIRES_API_URL: http://192.168.100.203:5000/api/prestataires
+        EXPO_PUBLIC_UPLOADS_URL: http://192.168.100.203:5000
     container_name: medicapp-mobile-web
     restart: unless-stopped
     ports:
@@ -80,7 +80,7 @@ services:
     build:
       context: ./portail-prestataire
       args:
-        REACT_APP_API_BASE_URL: http://localhost:5000/api
+        REACT_APP_API_BASE_URL: http://192.168.100.203:5000/api
     container_name: medicapp-portail
     restart: unless-stopped
     ports:

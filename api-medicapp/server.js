@@ -53,7 +53,7 @@ const startServer = async () => {
     console.log("✅ Connecté à MongoDB avec succès");
 
     app.listen(PORT, () => {
-      console.log(`🚀 API active sur http://localhost:${PORT}`);
+      console.log(`🚀 API active sur http://192.168.100.203:${PORT}`);
     });
   } catch (err) {
     console.error("❌ Erreur de connexion à MongoDB:", err.message);

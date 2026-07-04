@@ -12,6 +12,6 @@ export default {
 
   // Configuration de l'API
   API_BASE_URL:
-    process.env.EXPO_PUBLIC_API_URL || 'http://localhost:5000/api',
+    process.env.EXPO_PUBLIC_API_URL || 'http://192.168.100.203:5000/api',
   UPLOADS_PATH: '/uploads'
 }

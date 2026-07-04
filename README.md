@@ -46,6 +46,9 @@ Le projet est composé de 4 applications qui partagent une seule base de donnée
   2. **App cliente** — écran `CarteScreen` (QR code) verrouillé par un code PIN local (`PinGate`, hashé avec salage via `expo-crypto`, stockage sécurisé natif/web).
   3. **Portail de vérification prestataire** (`portail-prestataire`) — appli web dédiée (login, scan QR caméra via `@zxing/browser`, écran de résultat) consommée par le personnel des prestataires du réseau. Typecheck + build Docker + smoke test validés.
   4. **Administration** — écrans `admin-medicapp` pour créer/modifier/désactiver les comptes du portail prestataire (CRUD complet), et widget "Dernières vérifications de carte" sur le tableau de bord.
+- **Validation de bout en bout faite le 2026-07-04** : les 5 services Docker (`mongo`, `api`, `admin`, `mobile-web`, `portail`) tournent et passent leur healthcheck simultanément. CRUD `/api/prestataireAccounts` et liste `/api/carte/validations` testés au curl. Un bug de build Docker de `portail-prestataire` a été corrigé au passage : `@zxing/library` (peer dependency de `@zxing/browser`, nécessaire au runtime pour le scan QR) n'était pas installée avec `npm install --legacy-peer-deps` → déclarée explicitement dans `package.json`, et `portail-prestataire` a été ajouté à la CI (build Docker + typecheck) qui ne le couvrait pas encore.
+- **En cours : test sur téléphone physique (wifi local).** Pour rendre l'API et les fronts joignables depuis un téléphone sur le même réseau, `docker-compose.yml` et `portail-prestataire/.env.example` pointent temporairement sur l'IP LAN de la machine de dev (`192.168.100.203`) au lieu de `localhost` (idem côté `MedicApp`/`admin-medicapp`, déjà en dur dans leurs fichiers de config). Le serveur Metro (`expo start`) pour la version native se lance avec `REACT_NATIVE_PACKAGER_HOSTNAME=192.168.100.203` (l'ancien `expo-cli` global déprécié, qui interceptait la commande et cassait la détection LAN, a été désinstallé). **⚠️ À repasser sur `localhost`/variables d'environnement génériques avant tout partage du repo ou changement de réseau** — `192.168.100.203` est spécifique à cette machine et ce wifi, pas une valeur portable.
+- Comptes de test disponibles pour les essais manuels : compte portail prestataire `pharmacie.test@bsa.mg` / `Test1234!` (rattaché à la fiche annuaire "HJRA"), assuré de test `nom=Robel` / `identifiant=001` (société COLAS, sans `carteValideJusquau` donc toujours "valide" au scan).
 
 ## Architecture
 
@@ -311,3 +314,10 @@ Non planifiées, à discuter — listées ici pour mémoire :
 - Choix et mise en place d'une stratégie de déploiement (voir discussion précédente : séparation frontends/API ou VPS unique avec Docker Compose/Coolify).
 - Nettoyer ou retirer `src/services/database.ts` si `expo-sqlite` n'est plus utilisé.
 - Alertes anti-fraude à partir du journal `CarteValidation` (ex: multiples vérifications `invalide`/`expiree` rapprochées pour le même assuré ou le même établissement) — le widget "Dernières vérifications" du dashboard admin n'est pour l'instant qu'un affichage brut, sans détection ni notification.
+
+
+# Compte prestataire (portail, http://localhost:3002)
+
+- Email : pharmacie.test@bsa.mg
+- Mot de passe : Test1234!
+- Rattaché à la fiche prestataire "HJRA (Hôpital Joseph Ravoahangy Andrianavalona)" — s'affichera dans l'admin sous /admin/prestataire-accounts.
